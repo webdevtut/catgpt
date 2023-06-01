@@ -20,7 +20,7 @@ export default function Home() {
         {!user && (
             <>
             <Link href="/api/auth/login" className="rounded-md bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600">Login</Link>
-            <Link href="/api/auth/signup" className="rounded-md bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600">Signup</Link>
+            <Link href="/api/auth/signup" className="rounded-md bg-emerald-500 ml-2 px-4 py-2 text-white hover:bg-emerald-600">Signup</Link>
             </>
             )}
         </div>
