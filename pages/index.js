@@ -9,15 +9,21 @@ export default function Home() {
   if (error) return <div>{error.message}</div>
 
   return (
-    <div>
+    <>
       <Head>
-        <title>CatGPT</title>
+        <title>CatGPT | Login | Signup</title>
       </Head>
-      <h1>Welcome to the Next JS &amp; CatGPT</h1>
-      <div>
+      <div className="flex justify-center items-center min-h-screen w-full bg-gray-800 text-white text-center">
+        <div>
         {!!user && <Link href="/api/auth/logout">Logout</Link>}
-        {!user && <Link href="/api/auth/login">Login</Link>}
+        {!user && (
+            <>
+            <Link href="/api/auth/login" className="rounded-md bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600">Login</Link>
+            <Link href="/api/auth/signup" className="rounded-md bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600">Signup</Link>
+            </>
+            )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
