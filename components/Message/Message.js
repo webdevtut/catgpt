@@ -12,7 +12,7 @@ export const Message = ({ role, content }) => {
       }`}
     >
       <div>
-        {role === "user" && (
+        {role === "user" && !!user && (
           <Image
             src={user.picture}
             width={30}
