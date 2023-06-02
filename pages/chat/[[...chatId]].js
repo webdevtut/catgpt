@@ -1,12 +1,31 @@
 import { ChatSideBar } from "components/ChatSideBar";
 import Head from "next/head";
 import { useState } from "react";
+import { streamReader } from "openai-edge-stream";
 
 export default function ChatPage() {
+  const [incomingMessage, setIncomingMessage] = useState("");
   const [messageText, setMessageText] = useState("");
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Message Text:", messageText);
+    const response = await fetch(`/api/chat/sendMessage`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        message: messageText,
+      }),
+    });
+    const data = response.body;
+    if (!data) {
+      return;
+    }
+    const reader = data.getReader();
+    await streamReader(reader, (message) => {
+      setIncomingMessage((s) => `${s}${message.content}`);
+    });
   };
   return (
     <>
@@ -16,7 +35,7 @@ export default function ChatPage() {
       <div className="grid h-screen grid-cols-[260px_1fr]">
         <ChatSideBar />
         <div className="flex flex-col bg-gray-700">
-          <div className="flex-1">chat window</div>
+          <div className="flex-1 text-white">{incomingMessage}</div>
           <footer className="bg-gray-800 p-10">
             <form onSubmit={handleSubmit}>
               <fieldset className="flex gap-2">
