@@ -5,8 +5,13 @@ import { useEffect, useState } from "react";
 import { streamReader } from "openai-edge-stream";
 import { v4 as uuid } from 'uuid';
 import { useRouter } from "next/router";
+import { getSession } from "@auth0/nextjs-auth0";
+import { ObjectId } from "mongodb";
+import clientPromise from "lib/mongodb";
 
-export default function ChatPage({chatId}) {
+
+export default function ChatPage({chatId, title, messages}) {
+  console.log("props : ", title, messages );
   const [newChatId, setNewChatId] = useState(null);
   const [incomingMessage, setIncomingMessage] = useState("");
   const [messageText, setMessageText] = useState("");
@@ -100,9 +105,26 @@ export default function ChatPage({chatId}) {
 
 export const getServerSideProps = async (ctx) => {
   const chatId = ctx.params?.chatId?.[0] || null;
+  if(chatId) {
+    const {user} = await getSession(ctx.req, ctx.res);
+    const client = await clientPromise;
+    const db = client.db("catGPT");
+    const chat = await db.collection("chats").findOne({
+      userId: user.sub,
+      _id: new ObjectId(chatId)
+    })
+    return {
+      props: {
+        chatId,
+        title: chat.title,
+        messages: chat.messages.map((message) => ({
+          ...message,
+          _id: uuid(),
+        })),
+      },
+    };
+  }
   return {
-    props: {
-      chatId
-    }
+    props: {}
   }
 }
