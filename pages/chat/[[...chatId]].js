@@ -1,15 +1,26 @@
 import { ChatSideBar } from "components/ChatSideBar";
 import { Message } from "components/Message";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { streamReader } from "openai-edge-stream";
 import { v4 as uuid } from 'uuid';
+import { useRouter } from "next/router";
 
-export default function ChatPage() {
+export default function ChatPage({chatId}) {
+  const [newChatId, setNewChatId] = useState(null);
   const [incomingMessage, setIncomingMessage] = useState("");
   const [messageText, setMessageText] = useState("");
   const [newChatMessages, setNewChatMessages] = useState([]);
   const [generatingResponse, setGeneratingResponse] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if(!generatingResponse && newChatId) {
+      setNewChatId(null);
+      router.push(`/chat/${newChatId}`);
+    }
+  }, [newChatId, generatingResponse, router])
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGeneratingResponse(true);
@@ -37,7 +48,12 @@ export default function ChatPage() {
     }
     const reader = data.getReader();
     await streamReader(reader, (message) => {
-      setIncomingMessage((s) => `${s}${message.content}`);
+      console.log("Message", message);
+      if (message.event === "newChatId") {
+        setNewChatId(message.content);
+      } else {
+        setIncomingMessage((s) => `${s}${message.content}`);
+      }
     });
     setGeneratingResponse(false);
   };
@@ -47,7 +63,7 @@ export default function ChatPage() {
         <title>CatGPT | New Chat</title>
       </Head>
       <div className="grid h-screen grid-cols-[260px_1fr]">
-        <ChatSideBar />
+        <ChatSideBar chatId={chatId} />
         <div className="flex flex-col overflow-hidden bg-gray-700">
           <div className="flex-1 overflow-scroll text-white">
             {newChatMessages.map((message) => (
@@ -80,4 +96,13 @@ export default function ChatPage() {
       </div>
     </>
   );
+}
+
+export const getServerSideProps = async (ctx) => {
+  const chatId = ctx.params?.chatId?.[0] || null;
+  return {
+    props: {
+      chatId
+    }
+  }
 }

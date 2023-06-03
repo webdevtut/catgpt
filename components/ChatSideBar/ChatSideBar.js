@@ -3,7 +3,7 @@ import { faPlus, faMessage, faRightFromBracket } from "@fortawesome/free-solid-s
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export const ChatSideBar = () => {
+export const ChatSideBar = ({ chatId }) => {
   const [chatList, setChatList] = useState([]);
     useEffect(() => {
       const loadChatList = async () => {
@@ -15,7 +15,7 @@ export const ChatSideBar = () => {
         setChatList(json?.chats || []);
       };
       loadChatList();
-    });
+    }, [chatId]);
     return (
       <div className="flex flex-col overflow-hidden bg-gray-900 text-white">
         <div className="bg-gray-800">
@@ -32,7 +32,7 @@ export const ChatSideBar = () => {
             <Link
               key={chat._id}
               href={`chat/${chat._id}`}
-              className="side-menu-item"
+              className={`side-menu-item ${chatId === chat._id ? "bg-gray-700 hover:bg-gray-700" : ""}`}
             >
               <FontAwesomeIcon icon={faMessage} />
               {chat.title}
