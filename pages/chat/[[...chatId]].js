@@ -67,7 +67,7 @@ export default function ChatPage({chatId, title, messages}) {
       <Head>
         <title>CatGPT | New Chat</title>
       </Head>
-      <div className="grid h-screen grid-cols-[260px_1fr]">
+      <div className="grid h-screen sm:grid-cols-[1fr] grid-cols-[260px_1fr]">
         <ChatSideBar chatId={chatId} />
         <div className="flex flex-col overflow-hidden bg-gray-700">
           <div className="flex-1 overflow-scroll text-white">

@@ -27,7 +27,7 @@ export const ChatSideBar = ({ chatId }) => {
           New chat
         </Link>
         </div>
-        <div className="bg-grey-950 flex-1 overflow-auto">
+        <div className="bg-grey-950 flex-1 overflow-auto sm:max-h-36">
           {chatList.map((chat) => (
             <Link
               key={chat._id}
