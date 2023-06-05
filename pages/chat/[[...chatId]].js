@@ -10,7 +10,7 @@ import { ObjectId } from "mongodb";
 import clientPromise from "lib/mongodb";
 
 
-export default function ChatPage({chatId, title, messages}) {
+export default function ChatPage({chatId, title, messages = []}) {
   console.log("props : ", title, messages );
   const [newChatId, setNewChatId] = useState(null);
   const [incomingMessage, setIncomingMessage] = useState("");
@@ -18,6 +18,11 @@ export default function ChatPage({chatId, title, messages}) {
   const [newChatMessages, setNewChatMessages] = useState([]);
   const [generatingResponse, setGeneratingResponse] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setNewChatMessages([]);
+    setNewChatId(null);
+  }, [chatId])
 
   useEffect(() => {
     if(!generatingResponse && newChatId) {
@@ -60,8 +65,10 @@ export default function ChatPage({chatId, title, messages}) {
         setIncomingMessage((s) => `${s}${message.content}`);
       }
     });
+    setIncomingMessage("");
     setGeneratingResponse(false);
   };
+  const allMessages = [...messages, ...newChatMessages];
   return (
     <>
       <Head>
@@ -71,7 +78,7 @@ export default function ChatPage({chatId, title, messages}) {
         <ChatSideBar chatId={chatId} />
         <div className="flex flex-col overflow-hidden bg-gray-700">
           <div className="flex-1 overflow-scroll text-white">
-            {newChatMessages.map((message) => (
+            {allMessages.map((message) => (
               <Message
                 key={message._id}
                 role={message.role}
