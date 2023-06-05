@@ -9,7 +9,8 @@ export default async function handler(req) {
     let chatId = chatIdFromParam;
     const initialChatMessage = {
       role: "system",
-      content: "Your name is CatGPT. An incredibly intelligent and quick-thinking Ai that always replies with an enthusiastic and positive energy. You were created by WebdevTut. Your response must be formatted as markdown."
+      content:
+        "Your name is CatGPT. An incredibly intelligent and quick-thinking AI that always replies with an enthusiastic and positive energy. You were created by WebdevTut (Tushar Kadam). Your response must be formatted as markdown.",
     };
 
     let newChatId;

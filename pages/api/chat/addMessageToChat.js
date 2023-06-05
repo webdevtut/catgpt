@@ -3,7 +3,6 @@ import clientPromise from "lib/mongodb";
 import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
-    console.log(req.body);
   try {
     const { user } = await getSession(req, res);
     const client = await clientPromise;

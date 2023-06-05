@@ -8,10 +8,12 @@ import { useRouter } from "next/router";
 import { getSession } from "@auth0/nextjs-auth0";
 import { ObjectId } from "mongodb";
 import clientPromise from "lib/mongodb";
+import { faCat } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 
 
 export default function ChatPage({chatId, title, messages = []}) {
-  console.log("props : ", title, messages );
   const [newChatId, setNewChatId] = useState(null);
   const [incomingMessage, setIncomingMessage] = useState("");
   const [messageText, setMessageText] = useState("");
@@ -78,7 +80,6 @@ export default function ChatPage({chatId, title, messages = []}) {
     const reader = data.getReader();
     let content = "";
     await streamReader(reader, (message) => {
-      console.log("Message", message);
       if (message.event === "newChatId") {
         setNewChatId(message.content);
       } else {
@@ -96,9 +97,15 @@ export default function ChatPage({chatId, title, messages = []}) {
       <Head>
         <title>CatGPT | New Chat</title>
       </Head>
-      <div className="grid h-screen sm:grid-cols-[1fr] grid-cols-[260px_1fr]">
+      <div className="grid h-screen grid-cols-[260px_1fr] sm:grid-cols-[1fr]">
         <ChatSideBar chatId={chatId} />
         <div className="flex flex-col overflow-hidden bg-gray-700">
+          {allMessages.length == 0 && (
+            <div className="my-3 flex min-h-[20%] flex-col items-center justify-center text-3xl">
+              <FontAwesomeIcon icon={faCat} className="text-emerald-200" />
+              <h6 className="my-2 text-white">Start asking questions to AI</h6>
+            </div>
+          )}
           <div className="flex-1 overflow-scroll text-white">
             {allMessages.map((message) => (
               <Message
