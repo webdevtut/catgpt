@@ -28,7 +28,7 @@ export default function Home() {
                 <h1>Welcome to CatGPT</h1>
               </div>
               <div className="my-3 text-xl">
-                <h1>
+                <h1 className="mb-5">
                   By{" "}
                   <a
                     href="https://www.linkedin.com/in/tushar-web-dev/"
